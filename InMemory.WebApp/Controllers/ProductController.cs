@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.VisualBasic;
 
 namespace InMemory.WebApp.Controllers
 {
@@ -15,31 +14,20 @@ namespace InMemory.WebApp.Controllers
 
         public IActionResult Index()
         {
-            //Memory de olup olmadığını kontrol etmek için 1.ci yol
-            if (String.IsNullOrEmpty(memoryCache.Get<string>("zaman")))
-            {
-                memoryCache.Set<string>("zaman", DateTime.Now.ToString());
-            }
+            MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
+            options.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+            options.SlidingExpiration = TimeSpan.FromSeconds(10);
 
-            //Memory de olup olmadığını kontrol etmek için 2.ci yol
-            if(!memoryCache.TryGetValue("zaman", out string zamancache))
-            {
-                memoryCache.Set<string>("zaman", DateTime.Now.ToString());
-            }
+            memoryCache.Set<string>("zaman", DateTime.Now.ToString(), options);
+
 
             return View();
         }
 
         public IActionResult Show()
         {
-            memoryCache.Remove("zaman");
-
-            memoryCache.GetOrCreate<string>("zaman", entry =>
-            {
-                return DateTime.Now.ToString();
-            });
-
-            ViewBag.zaman = memoryCache.Get<string>("zaman");
+            memoryCache.TryGetValue("zaman", out string zamancache);
+            ViewBag.zaman = zamancache;
             return View();
         }
     }
