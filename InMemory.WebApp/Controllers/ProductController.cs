@@ -17,6 +17,7 @@ namespace InMemory.WebApp.Controllers
             MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
             options.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
             options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            options.Priority = CacheItemPriority.Normal;
 
             memoryCache.Set<string>("zaman", DateTime.Now.ToString(), options);
 
