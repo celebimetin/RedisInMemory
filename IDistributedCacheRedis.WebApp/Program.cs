@@ -2,6 +2,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -19,6 +24,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Products}/{action=Index}/{id?}");
 
 app.Run();
