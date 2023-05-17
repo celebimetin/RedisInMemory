@@ -50,5 +50,23 @@ namespace IDistributedCacheRedis.WebApp.Controllers
             distributedCache.Remove("product:1");
             return View();
         }
+
+        public IActionResult ImageCache()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/newyear.jpg");
+
+            byte[] imageByte = System.IO.File.ReadAllBytes(path);
+
+            distributedCache.Set("resim", imageByte);
+
+            return View();
+        }
+
+        public IActionResult ImageUrl()
+        {
+            byte[] imageByte = distributedCache.Get("resim");
+
+            return File(imageByte, "image/jpg");
+        }
     }
 }
